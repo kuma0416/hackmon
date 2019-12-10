@@ -1,0 +1,78 @@
+<!--<div>
+    <div style="float:left;">
+        A:&nbsp;
+    </div>
+    <div style="padding:0px;width: 80px;border-style:outset;border-width:3px;border-color:black;float:left;">
+        <div style="background-color: red;text-align:center;color:white;">
+            20/20
+        </div>
+    </div>
+</div>
+
+<br>&nbsp;
+
+<div>
+    <div style="float:left;">
+        B:&nbsp;
+    </div>
+    <div style="padding:0px;width: 80px;border-style:outset;border-width:3px;border-color:black;float:left;">
+        <div style="background-color: red;text-align:center;color:white;">
+                20/20
+        </div>
+    </div>
+</div>
+
+<br>&nbsp;
+
+<div>
+    <div style="float:left;">
+        C:&nbsp;
+    </div>
+    <div style="padding:0px;width: 80px;border-style:outset;border-width:3px;border-color:black;float:left;">
+        <div style="background-color: red;text-align:center;color:white;">
+                20/20
+        </div>
+    </div>
+</div>
+
+<br>&nbsp;
+
+<div>
+    <div style="float:left;">
+        D:&nbsp;
+    </div>
+    <div style="padding:0px;width: 80px;border-style:outset;border-width:3px;border-color:black;float:left;">
+        <div style="background-color: red;text-align:center;color:white;">
+                20/20
+        </div>
+    </div>
+</div>-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>大廳</title>
+</head>
+<body>
+    <%for(var i = 0;i<all.length;i++){%>
+        <div>
+            <div style="float:left;">
+                <%= all[i].name%>:&nbsp;
+            </div>
+            <div style="padding:0px;width: 80px;border-style:outset;border-width:3px;border-color:black;float:left;">
+                <% width = 4*all[i].blood %>
+                <% if (width <= 5){%>
+                    <div style="background-color: red;text-align:center;width:<%= width %>px;">
+                            <%= all[i].blood%>
+                    </div>
+                <% } else {%>
+                <div style="background-color: red;text-align:center;color:white;width:<%= width %>px;">
+                        <%= all[i].blood%>
+                </div>
+                <%}%>
+            </div>
+        </div>
+        <br>&nbsp;
+    <%}%>
+</body>
+</html>

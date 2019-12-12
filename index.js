@@ -31,7 +31,6 @@ function render(filename, params) {
   app.get('/', function(req, res){
       var username = req.session.username;
       var loginState = req.session.loginState;
-      var A, B, C, D, Abl, Bbl, Cbl, Dbl;
       db.getBlood(function(all){
           res.render('index', {
               all: all

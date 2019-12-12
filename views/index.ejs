@@ -59,15 +59,17 @@
             <div style="float:left;">
                 <%= all[i].name%>:&nbsp;
             </div>
-            <div style="padding:0px;width: 80px;border-style:outset;border-width:3px;border-color:black;float:left;">
+            <% totalwidth = (20+5*all[i].count)*4%>
+            <div style="padding:0px;width: <%= totalwidth%>px;border-style:outset;border-width:3px;border-color:black;float:left;">
                 <% width = 4*all[i].blood %>
-                <% if (width <= 5){%>
+                <% totalblood = 20+5*all[i].count%>
+                <% if (all[i].blood <= 5){%>
                     <div style="background-color: red;text-align:center;width:<%= width %>px;">
-                            <%= all[i].blood%>
+                            <%= all[i].blood%>/<%= totalblood%>
                     </div>
                 <% } else {%>
                 <div style="background-color: red;text-align:center;color:white;width:<%= width %>px;">
-                        <%= all[i].blood%>
+                        <%= all[i].blood%>/<%= totalblood%>
                 </div>
                 <%}%>
             </div>

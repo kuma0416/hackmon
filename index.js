@@ -29,15 +29,15 @@ function render(filename, params) {
   }));
 
   app.get('/', function(req, res){
-      var username = req.session.username;
+      var account = req.session.account;
       var loginState = req.session.loginState;
-      var A, B, C, D, Abl, Bbl, Cbl, Dbl;
       db.getBlood(function(all){
           res.render('index', {
-              all: all
+              all: all,
+              account:"",
+              wrong:""
           })
       });
-      //res.render('index')
   });
 
   app.get('/login', function(req, res){
@@ -50,21 +50,53 @@ function render(filename, params) {
     db.loginCheck(account, password, function(login){
         if(login == "success"){
             req.session.account = account;
-            res.render('index_plus', {
+            req.session.loginState = "true";
+            db.getBlood(function(all){
+              res.render('index', {
+                all: all,
                 account: account,
+                wrong:""
+              })
             })
+            /*res.render('index_plus', {
+                account: account
+            })*/
         } else {
             res.render('index')
         }
     })
   });
 
+  app.get('/update/:account', function(req, res){
+    if(req.session.account){
+      var account = req.session.account;
+      res.render('index_plus', {
+        account: account
+      });
+    } else {
+      db.getBlood(function(all){
+        res.render('index', {
+          all: all,
+          account:"",
+          wrong:"wrongPath"
+        });
+      });
+    }
+  });
+
   app.post('/update/:account', function(req, res){
+    var account = req.params.account;
     var blood = req.body.blood;
     var account = req.session.account;
     db.editBlood(account, blood, function(state){
         console.log(state);
-        res.redirect('/');
+        db.getBlood(function(all){
+          res.render('index', {
+            all: all,
+            account: account,
+            wrong:""
+          })
+        })
     });
   });
 

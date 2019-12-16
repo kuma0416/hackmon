@@ -54,6 +54,11 @@
     <title>大廳</title>
 </head>
 <body>
+    <%if(wrong=="wrongPath"){%>
+        <script>
+            alert("不要亂來喔!")
+        </script>
+    <%}%>
     <%for(var i = 0;i<all.length;i++){%>
         <div>
             <div style="float:left;">
@@ -61,7 +66,7 @@
             </div>
             <div style="padding:0px;width: 80px;border-style:outset;border-width:3px;border-color:black;float:left;">
                 <% width = 4*all[i].blood %>
-                <% if (width <= 5){%>
+                <% if (all[i].blood <= 5){%>
                     <div style="background-color: red;text-align:center;width:<%= width %>px;">
                             <%= all[i].blood%>
                     </div>
@@ -72,6 +77,11 @@
                 <%}%>
             </div>
         </div>
+        一共打倒 <%= all[i].count%> 次
+        <%if(all[i].name == account){%>
+            <% ref = "/update/" + account%>
+            <input type="button" value="血量更改" onclick="location.href='<%= ref%>'">
+        <%}%>
         <br>&nbsp;
     <%}%>
 </body>

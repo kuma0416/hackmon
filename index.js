@@ -29,14 +29,18 @@ function render(filename, params) {
   }));
 
   app.get('/', function(req, res){
-      var username = req.session.username;
+      var account = req.session.account;
       var loginState = req.session.loginState;
       db.getBlood(function(all){
+        db.getTeam(function(team){
           res.render('index', {
-              all: all
-          })
+            all: all,
+            account:"",
+            wrong:"",
+            team: team
+          });
+        });
       });
-      //res.render('index')
   });
 
   app.get('/login', function(req, res){
@@ -48,14 +52,45 @@ function render(filename, params) {
     var password = req.body.password;
     db.loginCheck(account, password, function(login){
         if(login == "success"){
-            req.session.account = account;
-            res.render('index_plus', {
-                account: account,
-            })
+          req.session.account = account;
+          req.session.loginState = "true";
+          res.render('back', {
+            account: req.session.account,
+            state: ""
+          })
         } else {
-            res.render('index')
+          db.getBlood(function(all){
+            db.getTeam(function(team){
+              res.render('index', {
+                all: all,
+                account:"",
+                wrong:"",
+                team: team
+              });
+            });
+          });
         }
     })
+  });
+
+  app.get('/update/:account', function(req, res){
+    if(req.session.account){
+      var account = req.session.account;
+      res.render('index_plus', {
+        account: account
+      });
+    } else {
+      db.getBlood(function(all){
+        db.getTeam(function(team){
+          res.render('index', {
+            all: all,
+            account:"",
+            wrong:"wrongPath",
+            team: team
+          });
+        });
+      });
+    }
   });
 
   app.post('/update/:account', function(req, res){
@@ -63,9 +98,42 @@ function render(filename, params) {
     var account = req.session.account;
     db.editBlood(account, blood, function(state){
         console.log(state);
-        res.redirect('/');
+        db.getBlood(function(all){
+          res.render('back', {
+            account:account,
+            state: state
+          })
+        })
     });
   });
+
+  app.get('/nowblood', function(req, res){
+    db.getBlood(function(all){
+      db.getTeam(function(team){
+        res.render('index', {
+          all: all,
+          account:"",
+          wrong:"",
+          team: team
+        });
+      });
+    });
+  })
+
+  app.get('/team', function(req, res){
+    res.render('team');
+  })
+
+  app.post('/team', function(req, res){
+    var plusScore = req.body.score;
+    var teamNo = req.body.teamnum;
+    db.editScore(teamNo, plusScore, function(state){
+      res.render('back', {
+        account: req.session.account,
+        state: state
+      })
+    })
+  })
 
   app.listen(port, function(){
       console.log("server running!");

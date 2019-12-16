@@ -54,6 +54,11 @@
     <title>大廳</title>
 </head>
 <body>
+    <%if(wrong=="wrongPath"){%>
+        <script>
+            alert("不要亂來喔!")
+        </script>
+    <%}%>
     <%for(var i = 0;i<all.length;i++){%>
         <div>
             <div style="float:left;">
@@ -62,19 +67,25 @@
             <% totalwidth = (20+5*all[i].count)*4%>
             <div style="padding:0px;width: <%= totalwidth%>px;border-style:outset;border-width:3px;border-color:black;float:left;">
                 <% width = 4*all[i].blood %>
-                <% totalblood = 20+5*all[i].count%>
                 <% if (all[i].blood <= 5){%>
                     <div style="background-color: red;text-align:center;width:<%= width %>px;">
-                            <%= all[i].blood%>/<%= totalblood%>
+                            <%= all[i].blood%>/<%= 20+5*all[i].count%>
                     </div>
                 <% } else {%>
-                <div style="background-color: red;text-align:center;color:white;width:<%= width %>px;">
-                        <%= all[i].blood%>/<%= totalblood%>
-                </div>
+                    <div style="background-color: red;text-align:center;color:white;width:<%= width %>px;">
+                        <%= all[i].blood%>/<%= 20+5*all[i].count%>
+                    </div>
                 <%}%>
             </div>
         </div>
+        一共打倒 <%= all[i].count%> 次
         <br>&nbsp;
     <%}%>
+    <div>
+        <%for(var i = 0;i<team.length;i++){%>
+            <h4><a style="font-family:Arial, Helvetica, sans-serif;">第<%= i+1%>小隊:<%= team[i].score%></a></h2><br>
+        <%}%>
+    </div>
+    
 </body>
 </html>

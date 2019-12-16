@@ -51,18 +51,18 @@ function render(filename, params) {
         if(login == "success"){
             req.session.account = account;
             req.session.loginState = "true";
-            db.getBlood(function(all){
+            res.render('back', {
+              account: req.session.account
+            })
+            /*db.getBlood(function(all){
               res.render('index', {
                 all: all,
                 account: account,
                 wrong:""
               })
-            })
-            /*res.render('index_plus', {
-                account: account
             })*/
         } else {
-            res.render('index')
+            res.render('index');
         }
     })
   });
@@ -91,10 +91,8 @@ function render(filename, params) {
     db.editBlood(account, blood, function(state){
         console.log(state);
         db.getBlood(function(all){
-          res.render('index', {
-            all: all,
-            account: account,
-            wrong:""
+          res.render('back', {
+            account:account
           })
         })
     });

@@ -23,21 +23,26 @@ exports.editBlood = function editBlood(account, number, callback){
                 .then(function(data){
                     var name = data.name;
                     var blood = data.blood;
-                    updateblood(name, blood, number);
+                    var count = data.count;
+                    updateblood(name, blood, count, number);
                     callback("edit success!");
                 })
         })
     })
 }
 
-function updateblood(account, prev, number){
+function updateblood(account, prev, count, number){
     console.log(account, prev, number);
     MongoClient.connect(uri, function(err, client){
         var db = client.db('MHlogin');
         if(err) throw err;
         db.collection('blood', function(err, collection){
             var now = prev - number;
-            collection.update({name:account},{$set:{blood:now}});
+            if(now < 0){
+                count++;
+                now = 20+5*count;
+            }
+            collection.update({name:account},{$set:{blood:now, count:count}});
         })
     })
 }

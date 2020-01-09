@@ -1,108 +1,87 @@
-var MongoClient = require('mongodb').MongoClient;
+var fs = require('fs');
+var user = 'user.json';
+var team = 'team.json';
+var guardian = 'guardian.json';
 
-const uri = "mongodb+srv://kuma0416:plmil456@myfirstcluster-nufiw.mongodb.net/test?retryWrites=true&w=majority";
-
-exports.getBlood = function getBlood(callback){
-    MongoClient.connect(uri, function(err, client){
-        var db = client.db('MHlogin');
-        db.collection('blood', function(err, collection){
-            collection.find().toArray(function (err, bloods){
-                if(err) throw err;
-                callback(bloods);
-            });
-        });
-    });
-}
-
-exports.editBlood = function editBlood(account, number, callback){
-    MongoClient.connect(uri, function(err, client){
-        var db = client.db('MHlogin');
-        if(err) throw err;
-        db.collection('blood', function(err, collection){
-            collection.findOne({name: account})
-                .then(function(data){
-                    var name = data.name;
-                    var blood = data.blood;
-                    var count = data.count;
-                    updateblood(name, blood, count, number);
-                    callback("success");
-                })
-        })
-    })
-}
-
-function updateblood(account, prev, count, number){
-    MongoClient.connect(uri, function(err, client){
-        var db = client.db('MHlogin');
-        if(err) throw err;
-        db.collection('blood', function(err, collection){
-            var now = prev - number;
-            if(now <= 0){
-                count ++;
-                var newbl = 20 + count*5;
-                collection.update({name:account},{$set:{blood:newbl,count:count}});
+var db = {
+    loginCheck: function(callback){
+        fs.readFile(user, 'utf-8', function(err, userlist){
+            if (err){
+                callback(err);
             } else {
-                collection.update({name:account},{$set:{blood:now}});
+                callback(JSON.parse(userlist));
             }
-        })
-    })
-}
-
-
-exports.getTeam = function getTeam(callback){
-    MongoClient.connect(uri, function(err, client){
-        var db = client.db('MHlogin');
-        db.collection('team', function(err, collection){
-            collection.find().toArray(function (err, teams){
-                if(err) throw err;
-                callback(teams);
-            });
         });
-    });
-}
+    },
 
-exports.editScore = function editScore(team, plus, callback){
-    MongoClient.connect(uri, function(err, client){
-        var db = client.db('MHlogin');
-        if(err) throw err;
-        db.collection('team', function(err, collection){
-            collection.findOne({team: team})
-                .then(function(data){
-                    var team = data.team;
-                    var score = data.score;
-                    updateScore(team, score, plus);
-                    callback("success");
-                })
-        })
-    })
-}
+    getJson: function(filename, callback){
+        var file = filename + ".json";
+        fs.readFile(file, 'utf-8', function(err, data){
+            if(err){
+                callback(err);
+            } else {
+                callback(JSON.parse(data));
+            }
+        });
+    },
 
-function updateScore(team, score, plus){
-    MongoClient.connect(uri, function(err, client){
-        var db = client.db('MHlogin');
-        if(err) throw err;
-        db.collection('team', function(err, collection){
-            var newscore = 0;
-            var number = parseInt(plus, 10);
-            newscore = score + number;
-            collection.update({team:team},{$set:{score:newscore}});
-        })
-    })
-}
+    save: function(data, filename, callback){
+        var file = filename + ".json"
+        fs.writeFile(file, JSON.stringify(data), callback);
+    },
 
-exports.loginCheck = function loginCheck(account, password, callback){
-    MongoClient.connect(uri, function(err, client){
-        var db = client.db('MHlogin');
-        if(err) throw err;
-        db.collection('user', function(err, collection){
-            collection.findOne({account: account})
-                .then(function(check){
-                    if(check == null){
-                        callback("fail");
-                    } else if(account === check.account && password === check.password){
-                        callback("success");
+    editGuardian: function(account, G1data, G2data, callback){
+        db.getJson("guardian", function(Glist){
+            var nowHP = 0;
+            for(var i = 0;i < Glist.length; i++){
+                if(Glist[i].no == G1data.name){
+                    nowHP = Glist[i].HP - G1data.HP;
+                    db.addlog({"account": account, "goal":"guardian", "no": Glist[i].name, "HP":G1data.HP}, callback);
+                    if(nowHP <= 0){
+                        Glist[i].count ++;
+                        Glist[i].HP = 20 + Glist[i].count*5;
+                    } else {
+                        Glist[i].HP = nowHP;
                     }
-                });
+                } else if (Glist[i].no == G2data.name){
+                    nowHP = Glist[i].HP - G1data.HP;
+                    db.addlog({"account": account, "goal":"guardian", "no": Glist[i].name, "HP":G2data.HP}, callback);
+                    if(nowHP <= 0){
+                        Glist[i].count ++;
+                        Glist[i].HP = 20 + Glist[i].count*5;
+                    } else {
+                        Glist[i].HP = nowHP;
+                    }
+                }
+            }
+            db.save(Glist, "guardian", callback);
         });
-    });
+    },
+
+    editTeam: function(account, T1data, T2data, callback){
+        db.getJson("team", function(Tlist){
+            var nowScore = 0;
+            for(var i = 0;i < Tlist.length; i++){
+                if(Tlist[i].number == T1data.number){
+                    db.addlog({"account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, callback);
+                    nowScore = Tlist[i].score + parseInt(T1data.score, 10);
+                    Tlist[i].score = nowScore;
+                } else if (Tlist[i].number == T2data.number){
+                    db.addlog({"account": account, "goal":"team", "no": T2data.number, "score":T2data.score}, callback);
+                    nowScore = Tlist[i].score + parseInt(T2data.score, 10);
+                    Tlist[i].score = nowScore;
+                }
+            }
+            db.save(Tlist, "team", callback);
+        })
+    },
+
+    addlog: function(log, callback){
+        db.getJson("log", function(logs){
+            logs.push(log);
+            db.save(logs, "log", callback);
+        });
+    }
 }
+
+module.exports = db;

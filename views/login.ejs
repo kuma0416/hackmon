@@ -5,6 +5,11 @@
     <title>登入</title>
 </head>
 <body>
+    <% if (loginSuccess == "fail"){%>
+        <script>
+            alert("登入失敗");
+        </script>
+    <% } %>
     <form method="POST" action="/login">
         <fieldset style="width: 20%;">
             <div>帳號:<input type="text" name="account"></div>

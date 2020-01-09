@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>歷程</title>
+</head>
+<body>
+    <% for(var i=0;i<log.length;i++){ %>
+        <% if(log[i] == "害" || log[i] == "數"){ %>
+            <%= log[i]%>
+            <br>
+        <%} else {%>
+            <%= log[i]%>
+        <%}%>
+    <%}%>
+</body>
+</html>

@@ -2,18 +2,61 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>後台</title>
+    <title>工作人員大廳</title>
+    <style>
+    a:hover
+    {
+        border: 3px #FF5511 solid;
+        border-radius:10px;
+        color: white;
+        background-color: orange;
+    }
+
+    a{
+        font-size: 25px;
+    }
+    </style>
 </head>
 <body>
-    <%if(state == "success"){%>
-        <script>
-            alert("編輯成功!")
-        </script>
+    <div style="font-family:Microsoft JhengHei;">
+    <% if(account){ %>
+        <div style="font-size: 25px;font-family:Microsoft JhengHei;">Hi,<%= account%><br>
+        <a class="btn" href="/logout">登出</a><br>
+        <a href="/back/edit">守護神血量/小隊分數</a><br>
+        <% if(account == "test"){%>
+            <a href="/log">歷程</a>
+        <%}%>
+    <% } else { %>
+        <a class="btn" href="/login">登入</a>
+    <% } %>
+    </div style="font-family:Microsoft JhengHei;">
+    <hr>
+    <%for(var i = 0;i<all.length;i++){%>
+        <div style="font-family:Microsoft JhengHei;font-size: 20px;">
+            <div style="float:left;">
+                <%= all[i].name%>:&nbsp;
+            </div>
+            <% totalwidth = (20+5*all[i].count)*4%>
+            <div style="padding:0px;width: <%= totalwidth%>px;border-style:outset;border-width:3px;border-color:black;float:left;">
+                <% width = 4*all[i].HP %>
+                <% if (all[i].HP <= 5){%>
+                    <div style="background-color: red;text-align:center;width:<%= width %>px;">
+                            <%= all[i].HP%>/<%= 20+5*all[i].count%>
+                    </div>
+                <% } else {%>
+                    <div style="background-color: red;text-align:center;color:white;width:<%= width %>px;">
+                        <%= all[i].HP%>/<%= 20+5*all[i].count%>
+                    </div>
+                <%}%>
+            </div>
+        </div>
+        <span style="font-size: 20px;font-family:Microsoft JhengHei;">一共打倒 <%= all[i].count%> 次</span>
+        <br>&nbsp;
     <%}%>
-    Hello, boss <%= account%>
-    <br>
-    <a href="/update/<%= account%>">減少血量</a><br>
-    <a href="/team">小隊加分</a><br>
-    <a href="/nowblood">守護神血量總覽與小隊積分</a>
+    <div style="font-family:Microsoft JhengHei;font-size: 20px;"">
+        <%for(var i = 0;i<team.length;i++){%>
+            <h4>第<%= i+1%>小隊:<%= team[i].score%></h2><br>
+        <%}%>
+    </div>
 </body>
 </html>

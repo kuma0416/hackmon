@@ -63,11 +63,11 @@ var db = {
             var nowScore = 0;
             for(var i = 0;i < Tlist.length; i++){
                 if(Tlist[i].number == T1data.number){
-                    db.addlog({"account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, callback);
+                    db.addtlog({"account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, callback);
                     nowScore = Tlist[i].score + parseInt(T1data.score, 10);
                     Tlist[i].score = nowScore;
                 } else if (Tlist[i].number == T2data.number){
-                    db.addlog({"account": account, "goal":"team", "no": T2data.number, "score":T2data.score}, callback);
+                    db.addtlog({"account": account, "goal":"team", "no": T2data.number, "score":T2data.score}, callback);
                     nowScore = Tlist[i].score + parseInt(T2data.score, 10);
                     Tlist[i].score = nowScore;
                 }
@@ -80,6 +80,13 @@ var db = {
         db.getJson("log", function(logs){
             logs.push(log);
             db.save(logs, "log", callback);
+        });
+    },
+
+    addtlog: function(log, callback){
+        db.getJson("logt", function(logs){
+            logs.push(log);
+            db.save(logs, "logt", callback);
         });
     }
 }

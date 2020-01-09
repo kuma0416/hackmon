@@ -94,6 +94,7 @@ app.get('/back/edit', function(req, res){
 });
 
 app.post('/edit', function(req, res){
+  console.log(req.body.guardian1);
   var G1data = {name:req.body.guardian1, HP:req.body.HP1};
   var G2data = {name:req.body.guardian2, HP:req.body.HP2};
   var T1data = {number:req.body.teamnum1,score:req.body.score1};
@@ -109,11 +110,23 @@ app.get('/log', function(req, res){
     for(var i=0;i<log.length;i++){
       if(log[i].goal == "guardian"){
         logParse += "使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "扣除" + log[i].HP + "點傷害\n";
-      } else if(log[i].goal == "team"){
-        logParse += "使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "增加" + log[i].score + "點分數\n";
       }
     }
     res.render('log', {
+      log: logParse
+    });
+  });
+});
+
+app.get('/logt', function(req, res){
+  db.getJson("logt", function(log){
+    var logParse = "";
+    for(var i=0;i<log.length;i++){
+      if(log[i].goal == "team"){
+        logParse += "使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "增加" + log[i].score + "點分數\n";
+      }
+    }
+    res.render('logt', {
       log: logParse
     });
   });

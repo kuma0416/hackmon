@@ -1,3 +1,5 @@
-monster system!
-update in 12/19
-use Json as database
+monster system!<br>
+update in 12/19<br>
+use Json as database<br>
+update in 2020/01/14<br>
+by kumagua0416

@@ -94,7 +94,6 @@ app.get('/back/edit', function(req, res){
 });
 
 app.post('/edit', function(req, res){
-  console.log(req.body.guardian1);
   var G1data = {name:req.body.guardian1, HP:req.body.HP1};
   var G2data = {name:req.body.guardian2, HP:req.body.HP2};
   var T1data = {number:req.body.teamnum1,score:req.body.score1};

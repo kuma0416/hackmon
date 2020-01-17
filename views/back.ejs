@@ -22,7 +22,7 @@
     <% if(account){ %>
         <div style="font-size: 25px;font-family:Microsoft JhengHei;">Hi,<%= account%><br>
         <a class="btn" href="/logout">登出</a><br>
-        <a href="/back/edit">守護神血量/小隊分數</a><br>
+        <a href="/back/edit">修正守護神血量/小隊分數</a><br>
         <% if(account == "test"){%>
             <a href="/log">守護神履歷</a><br>
             <a href="/logt">小隊履歷</a><br>
@@ -57,7 +57,7 @@
     <%}%>
     <div style="font-family:Microsoft JhengHei;font-size: 20px;"">
         <%for(var i = 0;i<team.length;i++){%>
-            <h4>第<%= i+1%>小隊:<%= team[i].score%></h2><br>
+            <h4><%= all[i].name%>隊:<%= team[i].score%></h2><br>
         <%}%>
     </div>
 </body>

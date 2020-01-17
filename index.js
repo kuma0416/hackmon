@@ -106,9 +106,10 @@ app.post('/edit', function(req, res){
 app.get('/log', function(req, res){
   db.getJson("log", function(log){
     var logParse = "";
+    var date = new Date();
     for(var i=0;i<log.length;i++){
       if(log[i].goal == "guardian"){
-        logParse += "使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "扣除" + log[i].HP + "點傷害\n";
+        logParse += date.toLocaleDateString()+ "," +date.toLocaleTimeString() + " ,   使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "扣除" + log[i].HP + "點傷害\n";
       }
     }
     res.render('log', {

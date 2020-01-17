@@ -90,6 +90,25 @@ var db = {
         })
     },
 
+    recoverguardian: function(callback){
+        db.getJson("guardian", function(guardian){
+            for(var i=0;i<guardian.length;i++){
+                guardian[i].HP = 20;
+                guardian[i].count = 0;
+            }
+            db.save(guardian, "guardian", callback);
+        })
+    },
+
+    recoverteam: function(callback){
+        db.getJson("team", function(team){
+            for(var i=0;i<team.length;i++){
+                team[i].score = 0;
+            }
+            db.save(team, "team", callback);
+        })
+    },
+
     addlog: function(log1, log2, callback){
         db.getJson("log", function(logs){
             logs.push(log1);

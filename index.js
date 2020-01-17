@@ -131,6 +131,15 @@ app.get('/logt', function(req, res){
   });
 });
 
+app.get('/recover', function(req, res){
+  db.recoverguardian(function(result){
+    console.log(result);
+  });
+  db.recoverteam(function(result){
+    console.log(result);
+  })
+});
+
 app.listen(port, function(){
   console.log("server running!");
 });

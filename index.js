@@ -121,9 +121,10 @@ app.get('/log', function(req, res){
 app.get('/logt', function(req, res){
   db.getJson("logt", function(log){
     var logParse = "";
+    var date = new Date();
     for(var i=0;i<log.length;i++){
       if(log[i].goal == "team"){
-        logParse += "使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "增加" + log[i].score + "點分數\n";
+        logParse += date.toLocaleDateString() + "," + date.toLocaleTimeString() + "使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "增加" + log[i].score + "點分數\n";
       }
     }
     res.render('logt', {

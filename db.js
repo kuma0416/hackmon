@@ -56,9 +56,11 @@ var db = {
                 }
             }
             if(Ge == 1){
-                db.addlog({"account": account, "goal":"guardian", "no": G1data.name, "HP":G1data.HP}, {}, callback);
+                var nowdate = new Date();
+                db.addlog({"time": nowdate.toLocaleString(), "account": account, "goal":"guardian", "no": G1data.name, "HP":G1data.HP}, {}, callback);
             } else if(Ge == 2) {
-                db.addlog({"account": account, "goal":"guardian", "no": G1data.name, "HP":G1data.HP}, {"account": account, "goal":"guardian", "no": G2data.name, "HP":G2data.HP}, callback);
+                var nowdate = new Date();
+                db.addlog({"time": nowdate.toLocaleString(), "account": account, "goal":"guardian", "no": G1data.name, "HP":G1data.HP}, {"time": nowdate.toLocaleString(), "account": account, "goal":"guardian", "no": G2data.name, "HP":G2data.HP}, callback);
             }
             db.save(Glist, "guardian", callback);
         });
@@ -71,20 +73,20 @@ var db = {
             for(var i = 0;i < Tlist.length; i++){
                 if(Tlist[i].number == T1data.number){
                     Te++;
-                    //db.addtlog({"account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, callback);
-                    nowScore = Tlist[i].score + parseInt(T1data.score, 10);
+                    nowScore = Tlist[i].score + parseInt(T1data.score);
                     Tlist[i].score = nowScore;
                 } else if (Tlist[i].number == T2data.number){
                     Te++;
-                    //db.addtlog({"account": account, "goal":"team", "no": T2data.number, "score":T2data.score}, callback);
                     nowScore = Tlist[i].score + parseInt(T2data.score, 10);
                     Tlist[i].score = nowScore;
                 }
             }
             if(Te == 1){
-                db.addtlog({"account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, {}, callback);
+                var nowdate = new Date();
+                db.addtlog({"time": nowdate.toLocaleString(), "account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, {}, callback);
             } else if(Te == 2) {
-                db.addtlog({"account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, {"account": account, "goal":"team", "no": T2data.number, "score":T2data.score}, callback);
+                var nowdate = new Date();
+                db.addtlog({"time": nowdate.toLocaleString(), "account": account, "goal":"team", "no": T1data.number, "score":T1data.score}, {"time": nowdate.toLocaleString(), "account": account, "goal":"team", "no": T2data.number, "score":T2data.score}, callback);
             }
             db.save(Tlist, "team", callback);
         })

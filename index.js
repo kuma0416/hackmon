@@ -90,8 +90,16 @@ app.get('/logout', function(req, res){
 });
 
 app.get('/back/edit', function(req, res){
-  res.render('edit');
+  if(req.session.account){
+    res.render('edit');
+  } else {
+    res.redirect('/warning');
+  }
 });
+
+app.get('/warning', function(req, res){
+  res.render('warning');
+})
 
 app.post('/edit', function(req, res){
   var G1data = {name:req.body.guardian1, HP:req.body.HP1};
@@ -109,7 +117,7 @@ app.get('/log', function(req, res){
     var date = new Date();
     for(var i=0;i<log.length;i++){
       if(log[i].goal == "guardian"){
-        logParse += date.toLocaleDateString()+ "," +date.toLocaleTimeString() + " ,   使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "扣除" + log[i].HP + "點傷害\n";
+        logParse += log[i].time + " ,   使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "扣除" + log[i].HP + "點傷害\n";
       }
     }
     res.render('log', {
@@ -124,7 +132,7 @@ app.get('/logt', function(req, res){
     var date = new Date();
     for(var i=0;i<log.length;i++){
       if(log[i].goal == "team"){
-        logParse += date.toLocaleDateString() + "," + date.toLocaleTimeString() + ", 使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "增加" + log[i].score + "點分數\n";
+        logParse += log[i].time + ", 使用者 " + log[i].account + " 對 " + log[i].goal + " " + log[i].no + "增加" + log[i].score + "點分數\n";
       }
     }
     res.render('logt', {
@@ -139,7 +147,8 @@ app.get('/recover', function(req, res){
   });
   db.recoverteam(function(result){
     console.log(result);
-  })
+  });
+  res.redirect('/back');
 });
 
 app.listen(port, function(){
